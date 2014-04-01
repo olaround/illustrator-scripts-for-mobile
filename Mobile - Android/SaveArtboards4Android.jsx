@@ -11,6 +11,7 @@ if (document && folder) {
 	saveToRes(100, "mdpi");
 	saveToRes(150, "hdpi");
 	saveToRes(200, "xhdpi");
+	saveToRes(300, "xxhdpi");
 }
 
 function saveToRes(scaleTo, resFolderName) {
@@ -24,12 +25,15 @@ function saveToRes(scaleTo, resFolderName) {
 		resFolder.create();
 	}
 
+	var documentName = document.name.replace(".ai","");
+	var suffix = prompt("Filename Suffix: ", "") || "";
+
 	for (i = document.artboards.length - 1; i >= 0; i--) {
 		document.artboards.setActiveArtboardIndex(i);
 		ab = document.artboards[i];
 
 		if (ab.name.indexOf("!") === -1) {
-			file = new File(resFolder.fsName + "/" + ab.name + ".png");
+			file = new File(resFolder.fsName + "/" + sanitizeName(documentName + "_" + ab.name + "_" + suffix) + ".png");
 
 			options = new ExportOptionsPNG24();
 			options.antiAliasing = true;
@@ -41,4 +45,35 @@ function saveToRes(scaleTo, resFolderName) {
 			document.exportFile(file, ExportType.PNG24, options);
 		};
 	}
+}
+
+function sanitizeName(fileName) {
+
+	var fileNameLowerCase = "";
+
+	fileName = fileName.replace(" ", "_");
+	fileName = fileName.replace(".", "_");
+	fileName = fileName.replace("-", "_");
+
+	for (var i = 0; i < fileName.length; i++) {
+
+		if (isUpperCase(fileName.charAt(i))) {
+
+			if (i > 0 && fileNameLowerCase.slice(-1) != "_") {
+				fileNameLowerCase += "_";
+			}
+
+			fileNameLowerCase += fileName.charAt(i).toLowerCase();
+
+		} else {
+
+			fileNameLowerCase += fileName.charAt(i);
+		}
+	}
+
+	return fileNameLowerCase;
+}
+
+function isUpperCase(myString) {
+	return (/^[A-Z]+$/).test(myString);
 }
