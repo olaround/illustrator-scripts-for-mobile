@@ -6,15 +6,17 @@
 var folder = Folder.selectDialog();
 var document = app.activeDocument;
 
+var suffix = prompt("Filename Suffix: ", "") || "";
+
 if (document && folder) {
-	saveToRes(75, "ldpi");
-	saveToRes(100, "mdpi");
-	saveToRes(150, "hdpi");
-	saveToRes(200, "xhdpi");
-	saveToRes(300, "xxhdpi");
+	saveToRes(75, "ldpi", suffix);
+	saveToRes(100, "mdpi", suffix);
+	saveToRes(150, "hdpi", suffix);
+	saveToRes(200, "xhdpi", suffix);
+	saveToRes(300, "xxhdpi", suffix);
 }
 
-function saveToRes(scaleTo, resFolderName) {
+function saveToRes(scaleTo, resFolderName, suffix) {
 	var i, ab,
 		file, options,
 		resFolder;
@@ -26,7 +28,6 @@ function saveToRes(scaleTo, resFolderName) {
 	}
 
 	var documentName = document.name.replace(".ai","");
-	var suffix = prompt("Filename Suffix: ", "") || "";
 
 	for (i = document.artboards.length - 1; i >= 0; i--) {
 		document.artboards.setActiveArtboardIndex(i);
